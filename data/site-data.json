@@ -1,0 +1,45 @@
+{
+  "title": "Coming soon page - S. Brice ? Portfolio - Statut du VPS v2.1 ? LIVE",
+  "description": "S. Brice ? Senior UI/UX designer bas? ? Luneray (76810), Seine-Maritime, Normandie. Design SaaS, user interface, user experience, print design, iconographie, formes vectorielles, mobile first et pixel perfect.",
+  "keywords": [
+    "senior UI/UX designer",
+    "UIUX",
+    "user interface",
+    "user experience",
+    "SaaS design",
+    "print design",
+    "iconographie",
+    "ic?nes",
+    "responsive design",
+    "mobile first",
+    "pixel perfect",
+    "formes vectorielles",
+    "vector shapes",
+    "designer freelance Normandie",
+    "designer Luneray",
+    "designer Seine-Maritime",
+    "designer Dieppe",
+    "designer Rouen"
+  ],
+  "geo": {
+    "region": "FR-76",
+    "placename": "Luneray",
+    "position": "49.8292;0.9142",
+    "icbm": "49.8292, 0.9142"
+  },
+  "content": {
+    "loaderMessages": [
+      "Chargement...",
+      "Initialisation...",
+      "Pr?t !"
+    ],
+    "cta": "Devis gratuit",
+    "portfolioLabel": "Portfolio",
+    "comingSoon": "Coming soon"
+  },
+  "social": {
+    "siteName": "S. Brice ? Designer UI/UX",
+    "ogTitle": "S. Brice ? Senior UI/UX designer ? Luneray, Normandie",
+    "ogDescription": "UI/UX, SaaS design, print design, iconographie, user interface, user experience, mobile first, responsive, pixel perfect et formes vectorielles. Bas? ? Luneray (76810), Normandie."
+  }
+}
