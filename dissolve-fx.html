@@ -616,7 +616,7 @@
   @media (prefers-reduced-motion:reduce){ .accent-text{ animation:none; background-position:0% 50%; } }
   /* description compacte : interligne resserré + text-wrap:pretty pour éviter les mots
      orphelins en fin de paragraphe (ex. "dark." seul sur sa ligne) */
-  .lede{ position:relative; top:10px; font-size:.84rem; line-height:1.42; letter-spacing:-.003em; color:var(--mist); max-width:58ch; margin:0 0 10px; text-wrap:pretty; }
+  .lede{ position:relative; top:10px; font-size:.84rem; line-height:calc(1.42em + 4px); letter-spacing:-.003em; color:var(--mist); max-width:58ch; margin:0 0 10px; text-wrap:pretty; }
   /* noms d'outils mis en avant dans la description : gras, blanc pur */
   .lede-brand{ font-weight:700; color:#fff; }
 
@@ -1505,7 +1505,7 @@
 
   @media (max-width:375px){
     .hero-text h1{ font-size:1.625rem; }
-    .lede{ font-size:.86rem; line-height:1.42; }
+    .lede{ font-size:.86rem; line-height:calc(1.42em + 4px); }
     .flip-badge{ width:46px; height:46px; top:-10px; right:-10px; }
     .sb-mark{ width:21px; height:21px; }
     .spec li{ font-size:.874rem; }
