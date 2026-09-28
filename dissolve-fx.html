@@ -534,7 +534,13 @@
   .brand.idle-shimmer .brand-home-label{
     transform:translateY(-1px);
     box-shadow:0 14px 30px -14px rgba(0,0,0,.4);
-    background:linear-gradient(160deg,rgba(74,55,110,.55),rgba(53,60,91,.6));
+    /* même dégradé animé que le titre "particules." (.accent-text / @keyframes titleGradient) */
+    background:linear-gradient(115deg,var(--title-grad-1),var(--title-grad-2),var(--title-grad-3),var(--title-grad-2),var(--title-grad-1));
+    background-size:300% 100%;
+    animation:titleGradient 7s linear infinite;
+  }
+  @media (prefers-reduced-motion:reduce){
+    .brand:hover .brand-home-label,.brand:focus-visible .brand-home-label{ animation:none; background-position:0% 50%; }
   }
   .brand-home-label .brand-dot{ color:var(--mist); }
 
