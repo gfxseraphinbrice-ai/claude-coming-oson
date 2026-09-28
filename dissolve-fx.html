@@ -973,7 +973,18 @@
      .hero grandit par paliers (920px, 1080px, puis 1360px en 4K) donc la marge doit être
      recalibrée à chaque palier de largeur de .hero pour garder ces ~140px constants. */
   @media (min-width:1441px){ .hero-visual{ margin-left:100px; } }
-  @media (min-width:2400px){ .hero-visual{ margin-left:-190px; } }
+  /* desktop (>980px) : le portrait prend toute la hauteur de la colonne texte, du haut du
+     titre jusqu'au bas du bloc d'infos techniques (.spec) ; la largeur suit le ratio 4/5 et
+     la carte grandit vers la droite (flex-start) au lieu de déborder sur le texte. */
+  @media (min-width:981px){
+    .hero-visual{ align-self:stretch; justify-content:flex-start; align-items:stretch; }
+    .portrait-card{ width:auto; height:100%; aspect-ratio:4/5; display:flex; flex-direction:column; }
+    .portrait-frame{ aspect-ratio:auto; flex:1 1 auto; }
+  }
+  /* la carte, plus large, part désormais du bord gauche de la colonne : marges recalibrées
+     pour garder l'écart avec le texte en 4K et ne pas déborder de l'écran entre 981 et 1170px */
+  @media (min-width:981px) and (max-width:1170px){ .hero-visual{ margin-left:32px; } }
+  @media (min-width:2400px){ .hero-visual{ margin-left:101px; } }
   @media (max-width:980px){
     .hero{ grid-template-columns:1fr; max-width:640px; padding-top:24px; }
     /* tablette/mobile : image au-dessus du texte, calée sur le même bord gauche que le texte
