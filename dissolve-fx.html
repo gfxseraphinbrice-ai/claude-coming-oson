@@ -534,13 +534,25 @@
   .brand.idle-shimmer .brand-home-label{
     transform:translateY(-1px);
     box-shadow:0 14px 30px -14px rgba(0,0,0,.4);
-    /* même dégradé animé que le titre "particules." (.accent-text / @keyframes titleGradient) */
+  }
+  /* même dégradé animé que le titre "particules." (.accent-text / @keyframes titleGradient),
+     porté par un calque ::before qui apparaît/disparaît en fondu (un background en dégradé
+     ne peut pas être interpolé, l'opacité d'un calque si). Le dégradé défile en permanence
+     sous le calque invisible, donc il est déjà en mouvement quand le fondu commence. */
+  .brand-home-label{ position:relative; isolation:isolate; overflow:hidden; }
+  .brand-home-label::before{
+    content:''; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    border-radius:inherit;
     background:linear-gradient(115deg,var(--title-grad-1),var(--title-grad-2),var(--title-grad-3),var(--title-grad-2),var(--title-grad-1));
     background-size:300% 100%;
+    opacity:0;
+    transition:opacity .5s var(--ease-out);
     animation:titleGradient 7s linear infinite;
   }
+  .brand:hover .brand-home-label::before,.brand:focus-visible .brand-home-label::before,
+  .brand.idle-shimmer .brand-home-label::before{ opacity:1; }
   @media (prefers-reduced-motion:reduce){
-    .brand:hover .brand-home-label,.brand:focus-visible .brand-home-label{ animation:none; background-position:0% 50%; }
+    .brand-home-label::before{ animation:none; background-position:0% 50%; }
   }
   .brand-home-label .brand-dot{ color:var(--mist); }
 
