@@ -618,7 +618,14 @@
      orphelins en fin de paragraphe (ex. "dark." seul sur sa ligne) */
   .lede{ position:relative; top:10px; font-size:.84rem; line-height:calc(1.42em + 4px); letter-spacing:-.003em; color:var(--mist); max-width:58ch; margin:0 0 10px; text-wrap:pretty; }
   /* noms d'outils mis en avant dans la description : gras, blanc pur */
-  .lede-brand{ font-weight:700; color:#fff; }
+  /* liens ChatGPT / Claude (target _blank) : gras blanc pur ; au survol un trait fin au
+     dégradé animé du titre se déploie de gauche à droite sous le mot (sans contour ni glow) */
+  .lede-brand{
+    font-weight:700; color:#fff; text-decoration:none; cursor:pointer;
+    background:linear-gradient(90deg,var(--title-grad-1),var(--title-grad-2),var(--title-grad-3),var(--title-grad-2),var(--title-grad-1)) 0 100% / 0% 2px no-repeat;
+    transition:background-size .4s var(--ease-out);
+  }
+  .lede-brand:hover,.lede-brand:focus-visible{ background-size:100% 2px; outline:none; }
   /* groupe de mots insécable : "matrix en bleu sombre" reste sur une seule ligne */
   .lede .nowrap{ white-space:nowrap; }
 
@@ -1588,7 +1595,7 @@
     <div class="hero-text">
       <p class="eyebrow cascade" style="--i:1">Étude visuelle · <span class="eyebrow-accent">Effet portrait</span></p>
       <h1 class="cascade" style="--i:2">Le visage se<br>dissout en<br><span class="accent-text">particules.</span></h1>
-      <p class="lede cascade" style="--i:3">Le visage subsiste toujours, tandis que tout le reste se transforme en poussière de cristal. Il n'y a techniquement rien de compliqué&nbsp;: une image avec un sujet dans <strong class="lede-brand">ChatGPT</strong> et un thème de couleur unique. Des effets de type <span class="nowrap">matrix en bleu sombre</span> et violet assez dark.<br><br>L'ensemble codé via <strong class="lede-brand">Claude</strong>, avec un découpage au pixel parfait pour une intégration frontale en HTML/CSS/JS.</p>
+      <p class="lede cascade" style="--i:3">Le visage subsiste toujours, tandis que tout le reste se transforme en poussière de cristal. Il n'y a techniquement rien de compliqué&nbsp;: une image avec un sujet dans <a class="lede-brand" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">ChatGPT</a> et un thème de couleur unique. Des effets de type <span class="nowrap">matrix en bleu sombre</span> et violet assez dark.<br><br>L'ensemble codé via <a class="lede-brand" href="https://claude.ai/" target="_blank" rel="noopener noreferrer">Claude</a>, avec un découpage au pixel parfait pour une intégration frontale en HTML/CSS/JS.</p>
 
       <ul class="spec cascade-card" style="--i:4">
         <li><span class="k">Technique</span><span class="v mono">mask-image + canvas 2D</span></li>
