@@ -622,10 +622,14 @@
      dégradé animé du titre se déploie de gauche à droite sous le mot (sans contour ni glow) */
   .lede-brand{
     font-weight:700; color:#fff; text-decoration:none; cursor:pointer;
-    background:linear-gradient(90deg,var(--title-grad-1),var(--title-grad-2),var(--title-grad-3),var(--title-grad-2),var(--title-grad-1)) 0 100% / 0% 2px no-repeat;
+    /* calque 1 : trait dégradé du survol ; calque 2 : petit divider au repos, blanc 5%,
+       20px de large, centré sous le mot */
+    background:
+      linear-gradient(90deg,var(--title-grad-1),var(--title-grad-2),var(--title-grad-3),var(--title-grad-2),var(--title-grad-1)) 0 100% / 0% 2px no-repeat,
+      linear-gradient(rgba(255,255,255,.05),rgba(255,255,255,.05)) 50% 100% / 20px 2px no-repeat;
     transition:background-size .4s var(--ease-out);
   }
-  .lede-brand:hover,.lede-brand:focus-visible{ background-size:100% 2px; outline:none; }
+  .lede-brand:hover,.lede-brand:focus-visible{ background-size:100% 2px, 20px 2px; outline:none; }
   /* groupe de mots insécable : "matrix en bleu sombre" reste sur une seule ligne */
   .lede .nowrap{ white-space:nowrap; }
 
