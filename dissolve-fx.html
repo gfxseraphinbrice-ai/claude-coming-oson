@@ -966,6 +966,9 @@
   @media (max-width:768px){
     .brand-name{ display:none; }
     .brand-tag{ display:none; }
+    /* mobile : seule l'icône maison reste, adoucie à 65% (pleine opacité au toucher/focus) */
+    .brand-mark{ opacity:.65; transition:opacity .3s var(--ease-out); }
+    .brand:hover .brand-mark,.brand:focus-visible .brand-mark,.brand:active .brand-mark{ opacity:1; }
     .hero{ padding-left:18px; padding-right:18px; gap:32px; }
     .spec{ max-width:none; }
     .diamond{ display:none; }
@@ -1527,7 +1530,7 @@
 <div class="scroll-progress" id="scrollProgress" aria-hidden="true">
   <span class="scroll-progress__fill"></span>
   <span class="scroll-progress__thumb"></span>
-  <span class="scroll-progress__tip" id="scrollProgressTip">100%</span>
+  <span class="scroll-progress__tip" id="scrollProgressTip">0%</span>
 </div>
 
 <div id="sk-cursor-blur"></div>
@@ -1948,20 +1951,21 @@
   function updateScrollProgress(){
     if(!syncScrollableState()){
       progress.style.setProperty('--scroll-track-top', '0px');
-      progressTip.textContent = '100%';
+      progressTip.textContent = '0%';
       ticking = false;
       return;
     }
     var maxScroll = Math.max(1, getMaxScroll());
     var raw = Math.min(1, Math.max(0, window.scrollY / maxScroll));
-    var remaining = Math.round((1 - raw) * 100);
+    /* progression parcourue : 0% en haut de page, 100% en bas */
+    var percent = Math.round(raw * 100);
     var trackHeight = progress.offsetHeight || Math.min(400, window.innerHeight * 0.72);
     var margin = 0;
     var maxTop = Math.max(margin, window.innerHeight - trackHeight - margin);
     var trackTop = margin + raw * (maxTop - margin);
 
     progress.style.setProperty('--scroll-track-top', trackTop + 'px');
-    progressTip.textContent = remaining + '%';
+    progressTip.textContent = percent + '%';
     ticking = false;
   }
 

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Icônes Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05080f; --surface:rgba(255,255,255,.035); --ice:#eef4ff; --mist:#9aa6c4; --mist-dim:#5d6886;
+    --g1:#2b3fdb; --g2:#7c2ae8; --g3:#1b2a8f; --cyan:#4fd1ff;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; background:var(--bg); color:var(--ice); font-family:Manrope,system-ui,sans-serif; -webkit-user-select:none; user-select:none; }
+  body{ min-height:100vh; padding:clamp(24px,5vw,72px) 16px; }
+  .wrap{ max-width:1280px; margin:0 auto; }
+  h1{ font-weight:800; font-size:clamp(1.5rem,1rem + 2.4vw,2.75rem); letter-spacing:-.015em; margin:0 0 8px; }
+  h1 span{ background:linear-gradient(115deg,var(--g1),var(--g2),var(--g3),var(--g2),var(--g1)); background-size:300% 100%; -webkit-background-clip:text; background-clip:text; color:transparent; animation:grad 7s linear infinite; }
+  @keyframes grad{ to{ background-position:300% 50%; } }
+  p.lede{ color:var(--mist); margin:0 0 40px; max-width:60ch; line-height:1.6; font-size:.95rem; }
+  .grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
+  .card{ position:relative; background:var(--surface); backdrop-filter:blur(14px); border-radius:20px; padding:26px 18px 20px; display:flex; flex-direction:column; align-items:center; gap:16px; transition:transform .45s cubic-bezier(.34,1.56,.64,1), background .35s; }
+  .card:hover{ transform:translateY(-6px); background:rgba(255,255,255,.06); }
+  .num{ position:absolute; top:12px; left:14px; font-family:'JetBrains Mono',monospace; font-size:.66rem; color:var(--mist-dim); }
+  .stage{ width:92px; height:92px; border-radius:28px; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg,rgba(43,63,219,.16),rgba(124,42,232,.12)); animation:float 4s ease-in-out infinite; }
+  .card:nth-child(2n) .stage{ animation-delay:-1.3s; } .card:nth-child(3n) .stage{ animation-delay:-2.6s; }
+  @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-6px); } }
+  .stage svg{ width:44px; height:44px; overflow:visible; transition:transform .5s cubic-bezier(.34,1.56,.64,1); }
+  .card:hover .stage svg{ transform:scale(1.12) rotate(-4deg); }
+  .row{ display:flex; gap:14px; align-items:center; }
+  .row .mini{ width:21px; height:21px; }
+  .row .mini.dim{ opacity:.65; }
+  .name{ font-weight:700; font-size:.9rem; text-align:center; }
+  .desc{ color:var(--mist); font-size:.74rem; text-align:center; line-height:1.5; margin-top:-8px; }
+  .tag{ font-family:'JetBrains Mono',monospace; font-size:.62rem; color:var(--mist-dim); }
+  @media (max-width:1440px){ .grid{ gap:14px; } }
+  @media (max-width:1170px){ .grid{ grid-template-columns:repeat(4,1fr); } }
+  @media (max-width:980px){ .grid{ grid-template-columns:repeat(3,1fr); } }
+  @media (max-width:768px){ .grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:375px){ .grid{ grid-template-columns:1fr; } }
+  @media (min-width:2560px){ .wrap{ max-width:1800px; } .stage{ width:120px; height:120px; } .stage svg{ width:58px; height:58px; } }
+  @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important; } }
+</style></head>
+<body><div class="wrap">
+  <h1>10 icônes <span>Home</span> arrondies</h1>
+  <p class="lede">Toutes en SVG 24×24, trait blanc 2px à bouts ronds, prêtes à remplacer l'icône actuelle dans <code>.brand-mark</code>. Sous chaque carte : aperçu à la taille réelle (21px), à 100% puis à 65% comme sur mobile.</p>
+  <div class="grid" id="grid"></div>
+</div>
+<script>
+var S='fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+var icons=[
+ ["Goutte","Toit en arche douce, porte en capsule : une maison-galet.",
+  '<path d="M4 11.5C4 7 7.6 3.5 12 3.5S20 7 20 11.5V18a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 18z"/><path d="M10 20.5v-4a2 2 0 0 1 4 0v4"/>'],
+ ["Squircle","Base squircle très ronde et toit arrondi, esprit iOS.",
+  '<path d="M3.5 11.2 10.4 5a2.4 2.4 0 0 1 3.2 0l6.9 6.2"/><path d="M5.5 10v7.5c0 1.7 1.3 3 3 3h7c1.7 0 3-1.3 3-3V10"/><circle cx="12" cy="15" r="1.6"/>'],
+ ["Arche","Toit en demi-cercle, façon porte méditerranéenne.",
+  '<path d="M4.5 20.5V11a7.5 7.5 0 0 1 15 0v9.5"/><path d="M3 20.5h18"/><path d="M9.5 20.5V16a2.5 2.5 0 0 1 5 0v4.5"/>'],
+ ["Blob","Silhouette organique asymétrique, toit qui ondule.",
+  '<path d="M4 12.2c0-1 .5-1.9 1.3-2.5l5.2-4.6a2.3 2.3 0 0 1 3 0l5.2 4.6c.8.6 1.3 1.5 1.3 2.5V17c0 2-1.6 3.5-3.6 3.5H7.6C5.6 20.5 4 19 4 17z"/><path d="M9 15.5c1.8 1.5 4.2 1.5 6 0"/>'],
+ ["Maison + cœur","Porte remplacée par un petit cœur : chaleureux, atypique.",
+  '<path d="M3.5 10.8 10.5 4.6a2.3 2.3 0 0 1 3 0l7 6.2"/><path d="M5.5 9.5v8a3 3 0 0 0 3 3h7a3 3 0 0 0 3-3v-8"/><path d="M12 17.2s-2.6-1.5-2.6-3.3a1.4 1.4 0 0 1 2.6-.7 1.4 1.4 0 0 1 2.6.7c0 1.8-2.6 3.3-2.6 3.3z"/>'],
+ ["Orbite","Maison posée dans un cercle ouvert, clin d'œil au scan/orbite.",
+  '<path d="M20.5 12A8.5 8.5 0 1 1 16.2 4.6"/><path d="M8 12.5 12 9l4 3.5"/><path d="M9.3 11.5v3.6c0 .5.4.9.9.9h3.6c.5 0 .9-.4.9-.9v-3.6"/>'],
+ ["Cheminée","Toit arrondi avec une cheminée en pilule, fumée en point.",
+  '<path d="M3.5 11 10.5 4.8a2.3 2.3 0 0 1 3 0l7 6.2"/><path d="M16 6.8V4.5a1 1 0 0 1 2 0v4"/><circle cx="17" cy="2" r=".4"/><path d="M5.5 9.8v7.7a3 3 0 0 0 3 3h7a3 3 0 0 0 3-3V9.8"/><path d="M10 20.5v-3.5a2 2 0 0 1 4 0v3.5"/>'],
+ ["Fenêtre ronde","Façade simple, grand hublot rond au lieu d'une porte.",
+  '<path d="M3.5 11 10.5 4.8a2.3 2.3 0 0 1 3 0l7 6.2"/><path d="M5.5 9.8v7.7a3 3 0 0 0 3 3h7a3 3 0 0 0 3-3V9.8"/><circle cx="12" cy="14.8" r="2.4"/>'],
+ ["Ligne continue","Tracé d'un seul trait qui dessine toit + porte, très 2026.",
+  '<path d="M3.5 12 10.4 5.4a2.3 2.3 0 0 1 3.2 0L20.5 12M6 10v8a2.5 2.5 0 0 0 2.5 2.5H10v-4a2 2 0 0 1 4 0v4h1.5A2.5 2.5 0 0 0 18 18v-8"/>'],
+ ["Pilule duo","Deux volumes arrondis emboîtés : maison + annexe.",
+  '<path d="M3.5 20.5v-7a4.5 4.5 0 0 1 9 0v7"/><path d="M12.5 20.5v-9.5a4 4 0 0 1 8 0v9.5"/><path d="M2.5 20.5h19"/><path d="M6.5 20.5v-3a1.5 1.5 0 0 1 3 0v3"/>']
+];
+var g=document.getElementById('grid');
+icons.forEach(function(ic,i){
+  var svg='<svg viewBox="0 0 24 24" '+S+'>'+ic[2]+'</svg>';
+  var el=document.createElement('div'); el.className='card';
+  el.innerHTML='<span class="num">'+String(i+1).padStart(2,'0')+'</span><div class="stage">'+svg+'</div>'
+   +'<div class="name">'+ic[0]+'</div><div class="desc">'+ic[1]+'</div>'
+   +'<div class="row"><span class="tag">21px</span>'+svg.replace('<svg','<svg class="mini"')+svg.replace('<svg','<svg class="mini dim"')+'<span class="tag">65%</span></div>';
+  g.appendChild(el);
+});
+</script>
+</body></html>
