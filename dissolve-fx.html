@@ -694,7 +694,8 @@
   }
   .spec:hover::before,.spec:focus-within::before{
     opacity:1;
-    animation:specScanSweep 1.12s linear infinite, specLaserGradient 7s linear infinite; /* 2.8s / 2.5 = 2,5x plus rapide */
+    /* au survol : UN seul passage du laser (1 itération, reste hors champ en bas ensuite) */
+    animation:specScanSweep 1.12s linear 1 forwards, specLaserGradient 7s linear infinite;
   }
   /* même défilement que @keyframes titleGradient, sur les 3 calques couleur du laser uniquement */
   @keyframes specLaserGradient{
