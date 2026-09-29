@@ -544,7 +544,7 @@
   .brand-mark-arrow{ transition:stroke .3s var(--ease-out); }
   .brand:hover .brand-mark,.brand:focus-visible .brand-mark{ transform:rotate(-12deg) scale(1.08); }
   .brand:hover .brand-mark-arrow,.brand:focus-visible .brand-mark-arrow{ stroke:var(--accent); }
-  .brand-mark.is-bounce{ animation:brandMarkBounce .42s cubic-bezier(.34,1.56,.64,1); }
+  .brand-mark.is-bounce{ animation:brandMarkBounce .84s cubic-bezier(.34,1.56,.64,1); }
   @keyframes brandMarkBounce{
     0%{ transform:rotate(-12deg) scale(1.08); }
     35%{ transform:rotate(-12deg) scale(.86); }
@@ -2894,14 +2894,23 @@
 
 
 <script>
-/* icône retour accueil : petit rebond au clic / tap */
+/* icône retour accueil : au clic, rebond joué en entier (0,84 s, 2x plus long) PUIS ouverture
+   de l'URL. Ctrl/Cmd/Maj/clic molette gardent le comportement natif (nouvel onglet). */
 (function(){
-  var mark=document.querySelector('#brandHome .brand-mark');
+  var link=document.getElementById('brandHome');
+  var mark=link && link.querySelector('.brand-mark');
   if(!mark) return;
-  document.getElementById('brandHome').addEventListener('pointerdown',function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, pending=false;
+  link.addEventListener('click',function(e){
+    if(reduce || e.defaultPrevented || e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    if(pending) return; pending=true;
+    var href=link.href;
     mark.classList.remove('is-bounce'); void mark.offsetWidth; mark.classList.add('is-bounce');
+    var go=function(){ window.location.href=href; };
+    mark.addEventListener('animationend',go,{once:true});
+    setTimeout(go,1000); /* filet de sécurité */
   });
-  mark.addEventListener('animationend',function(){ mark.classList.remove('is-bounce'); });
 })();
 </script>
 </body></html>
