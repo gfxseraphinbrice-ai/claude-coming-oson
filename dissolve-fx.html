@@ -465,6 +465,18 @@
     animation-play-state:running;
   }
 
+  /* retour sur la photo en remontant la page : mêmes effets qu'au survol (classe .scroll-hover
+     posée en JS) + légère inclinaison 3D jouée une fois (l'animation passe devant le transform
+     inline du tilt souris) */
+  .portrait-card.scroll-hover{ animation:scrollHoverTilt 1.6s var(--ease-out); }
+  @keyframes scrollHoverTilt{
+    0%{ transform:rotateX(0) rotateY(0); }
+    30%{ transform:rotateX(6deg) rotateY(-7deg); }
+    65%{ transform:rotateX(-3deg) rotateY(4deg); }
+    100%{ transform:rotateX(0) rotateY(0); }
+  }
+  @media (prefers-reduced-motion:reduce){ .portrait-card.scroll-hover{ animation:none; } }
+
   /* ---- révélation au scroll (en cascade, dans les 2 sens) ----
      Une fois l'entrée d'ouverture terminée, html.cascade-done fige les éléments .cascade /
      .cascade-card dans leur état final (les animations "forwards" bloqueraient sinon toute
@@ -830,7 +842,7 @@
     opacity:0;
     transition:opacity .55s var(--ease-out);
   }
-  .portrait-card:hover .aurora-sweep,
+  .portrait-card:hover .aurora-sweep,.portrait-card.scroll-hover .aurora-sweep,
   .portrait-card.aurora-pulse .aurora-sweep{
     opacity:.62;
     animation:auroraSweep 5.5s linear infinite, auroraHue 9s linear infinite;
@@ -845,7 +857,7 @@
     100%{ filter:hue-rotate(0deg); }
   }
   @media (prefers-reduced-motion:reduce){
-    .portrait-card:hover .aurora-sweep,
+    .portrait-card:hover .aurora-sweep,.portrait-card.scroll-hover .aurora-sweep,
     .portrait-card.aurora-pulse .aurora-sweep{ animation:none; opacity:.4; }
   }
 
@@ -871,8 +883,8 @@
     opacity:0;
     transition:opacity .3s var(--ease-out);
   }
-  .portrait-card:hover .matrix-rain{ opacity:.85; }
-  .portrait-card:hover .scan-light,
+  .portrait-card:hover .matrix-rain,.portrait-card.scroll-hover .matrix-rain{ opacity:.85; }
+  .portrait-card:hover .scan-light,.portrait-card.scroll-hover .scan-light,
   .portrait-card.matrix-pulse .scan-light{
     opacity:1;
     animation:scanSweep 6.7s linear infinite;
@@ -888,7 +900,7 @@
     100%{ top:100%; opacity:0; }
   }
   @media (prefers-reduced-motion:reduce){
-    .portrait-card:hover .scan-light,
+    .portrait-card:hover .scan-light,.portrait-card.scroll-hover .scan-light,
     .portrait-card.matrix-pulse .scan-light{ animation:none; opacity:.5; top:40%; }
   }
 
@@ -906,7 +918,7 @@
     transition:opacity .38s cubic-bezier(.4,0,1,1), transform .38s cubic-bezier(.4,0,1,1);
   }
   .scan-corner--bl{ bottom:14px; left:14px; border-bottom:2.5px solid #4fd1ff; border-left:2.5px solid #4fd1ff; border-radius:0 0 0 4px; transition-delay:0s; }
-  .portrait-card:hover .scan-corner,
+  .portrait-card:hover .scan-corner,.portrait-card.scroll-hover .scan-corner,
   .portrait-card.matrix-pulse .scan-corner{
     opacity:1;
     transform:scale(1);
@@ -916,7 +928,7 @@
   }
   @media (prefers-reduced-motion:reduce){
     .scan-corner{ transition:none!important; transform:none!important; }
-    .portrait-card:hover .scan-corner,
+    .portrait-card:hover .scan-corner,.portrait-card.scroll-hover .scan-corner,
     .portrait-card.matrix-pulse .scan-corner{ opacity:.85; transform:none!important; transition:none!important; }
   }
   /* coin haut-gauche isolé en élément unique — contour tireté (dashed), dégradé vert forêt
@@ -930,7 +942,7 @@
     transition:opacity .38s cubic-bezier(.4,0,1,1), transform .38s cubic-bezier(.4,0,1,1);
     transition-delay:.18s;
   }
-  .portrait-card:hover .scan-corner-tl-dashed,
+  .portrait-card:hover .scan-corner-tl-dashed,.portrait-card.scroll-hover .scan-corner-tl-dashed,
   .portrait-card.matrix-pulse .scan-corner-tl-dashed{
     opacity:1;
     transform:scale(1);
@@ -939,7 +951,7 @@
   }
   @media (prefers-reduced-motion:reduce){
     .scan-corner-tl-dashed{ transition:none!important; transform:none!important; }
-    .portrait-card:hover .scan-corner-tl-dashed,
+    .portrait-card:hover .scan-corner-tl-dashed,.portrait-card.scroll-hover .scan-corner-tl-dashed,
     .portrait-card.matrix-pulse .scan-corner-tl-dashed{ opacity:.85; transform:none!important; transition:none!important; }
   }
   /* coin bas-droit isolé en élément unique — blanc à 65% d'opacité */
@@ -955,7 +967,7 @@
     transition:opacity .38s cubic-bezier(.4,0,1,1), transform .38s cubic-bezier(.4,0,1,1);
     transition-delay:0s;
   }
-  .portrait-card:hover .scan-corner-br-white,
+  .portrait-card:hover .scan-corner-br-white,.portrait-card.scroll-hover .scan-corner-br-white,
   .portrait-card.matrix-pulse .scan-corner-br-white{
     opacity:1;
     transform:scale(1);
@@ -964,7 +976,7 @@
   }
   @media (prefers-reduced-motion:reduce){
     .scan-corner-br-white{ transition:none!important; transform:none!important; }
-    .portrait-card:hover .scan-corner-br-white,
+    .portrait-card:hover .scan-corner-br-white,.portrait-card.scroll-hover .scan-corner-br-white,
     .portrait-card.matrix-pulse .scan-corner-br-white{ opacity:.85; transform:none!important; transition:none!important; }
   }
   /* coin haut-droit isolé en élément unique — jamais associé/couplé aux
@@ -983,7 +995,7 @@
     transition:opacity .38s cubic-bezier(.4,0,1,1), transform .38s cubic-bezier(.4,0,1,1);
     transition-delay:.18s;
   }
-  .portrait-card:hover .viewfinder-corner-tr,
+  .portrait-card:hover .viewfinder-corner-tr,.portrait-card.scroll-hover .viewfinder-corner-tr,
   .portrait-card.matrix-pulse .viewfinder-corner-tr{
     opacity:1;
     transform:scale(1);
@@ -992,7 +1004,7 @@
   }
   @media (prefers-reduced-motion:reduce){
     .viewfinder-corner-tr{ transition:none!important; transform:none!important; }
-    .portrait-card:hover .viewfinder-corner-tr,
+    .portrait-card:hover .viewfinder-corner-tr,.portrait-card.scroll-hover .viewfinder-corner-tr,
     .portrait-card.matrix-pulse .viewfinder-corner-tr{ opacity:.85; transform:none!important; transition:none!important; }
   }
 
@@ -1005,7 +1017,7 @@
     opacity:.5; mix-blend-mode:screen;
     transition:opacity .45s var(--ease-out);
   }
-  .portrait-card:hover .liquid-rain,
+  .portrait-card:hover .liquid-rain,.portrait-card.scroll-hover .liquid-rain,
   .portrait-card.liquid-pulse .liquid-rain{ opacity:.88; }
   @media (prefers-reduced-motion:reduce){
     .liquid-rain{ display:none; }
@@ -2498,7 +2510,7 @@
      et uniquement au survol souris elle REMONTE (bas -> haut).
      Le pulse automatique (.matrix-pulse, toutes les 5s) n'inverse plus rien. */
   function isHovered(){
-    return card.matches(':hover');
+    return card.matches(':hover') || card.classList.contains('scroll-hover');
   }
   var lastReversed = false;
 
@@ -2981,6 +2993,29 @@
   if(root.classList.contains('site-ready')) whenReady();
   else new MutationObserver(function(m,o){ if(root.classList.contains('site-ready')){ o.disconnect(); whenReady(); } })
         .observe(root,{attributes:true,attributeFilter:['class']});
+})();
+</script>
+
+<script>
+/* photo : quand on remonte la page (depuis le bas) et que la carte portrait revient à l'écran,
+   elle rejoue l'effet de survol (scanner, matrix, coins, aurora, rebond + inclinaison) ~2,6 s */
+(function(){
+  var card=document.getElementById('portraitCard');
+  if(!card || !('IntersectionObserver' in window)) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var lastY=window.scrollY, dirUp=false, timer=0, wasOut=false;
+  addEventListener('scroll',function(){ var y=window.scrollY; if(y!==lastY){ dirUp=y<lastY; lastY=y; } },{passive:true});
+  function play(){
+    card.classList.remove('scroll-hover'); void card.offsetWidth; card.classList.add('scroll-hover');
+    /* rebond existant de la photo, déclenché comme à l'entrée du pointeur */
+    try{ card.dispatchEvent(new PointerEvent('pointerenter',{pointerType:'mouse'})); }catch(e){}
+    clearTimeout(timer); timer=setTimeout(function(){ card.classList.remove('scroll-hover'); },2600);
+  }
+  new IntersectionObserver(function(entries){
+    var en=entries[0];
+    if(!en.isIntersecting){ wasOut=true; return; }
+    if(wasOut && dirUp){ wasOut=false; play(); }
+  },{ threshold:0.35 }).observe(card);
 })();
 </script>
 </body></html>
