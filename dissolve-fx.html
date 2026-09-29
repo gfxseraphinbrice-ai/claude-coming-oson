@@ -537,6 +537,21 @@
   .brand:hover{ transform:translateY(-1px); }
   .brand-mark{ width:21px; height:21px; flex:none; display:flex; align-items:center; justify-content:center; }
   .brand-mark svg{ width:100%; height:100%; overflow:visible; }
+  /* icône retour accueil : au survol, la flèche passe en bleu azur (même couleur que l'icône
+     du CTA "Devis gratuit", var(--accent)) et toute l'icône s'incline (intensité moyenne) ;
+     au clic, petit rebond. */
+  .brand-mark{ transition:transform .45s var(--ease-jelly); transform-origin:50% 60%; }
+  .brand-mark-arrow{ transition:stroke .3s var(--ease-out); }
+  .brand:hover .brand-mark,.brand:focus-visible .brand-mark{ transform:rotate(-12deg) scale(1.08); }
+  .brand:hover .brand-mark-arrow,.brand:focus-visible .brand-mark-arrow{ stroke:var(--accent); }
+  .brand-mark.is-bounce{ animation:brandMarkBounce .42s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes brandMarkBounce{
+    0%{ transform:rotate(-12deg) scale(1.08); }
+    35%{ transform:rotate(-12deg) scale(.86); }
+    65%{ transform:rotate(-12deg) scale(1.14); }
+    100%{ transform:rotate(-12deg) scale(1.08); }
+  }
+  @media (prefers-reduced-motion:reduce){ .brand-mark{ transition:none; } .brand-mark.is-bounce{ animation:none; } }
   .brand-name{ font-size:.82rem; color:var(--mist); font-weight:500; }
   .brand-dot{ color:var(--mist-dim); }
   .brand-home-label{
@@ -1609,8 +1624,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M8.5 11 14 6.2a2 2 0 0 1 2.6 0L22 11"></path>
             <path d="M10 10v8a2 2 0 0 0 2 2h6.5a2 2 0 0 0 2-2v-8"></path>
-            <path d="M7 14.5H2.5"></path>
-            <path d="M5 12 2.5 14.5 5 17"></path>
+            <path class="brand-mark-arrow" d="M7 14.5H2.5"></path>
+            <path class="brand-mark-arrow" d="M5 12 2.5 14.5 5 17"></path>
           </svg>
         </span>
         <span class="brand-name brand-home-label">Retourner à l'accueil</span>
@@ -2877,4 +2892,16 @@
 })();
 </script>
 
+
+<script>
+/* icône retour accueil : petit rebond au clic / tap */
+(function(){
+  var mark=document.querySelector('#brandHome .brand-mark');
+  if(!mark) return;
+  document.getElementById('brandHome').addEventListener('pointerdown',function(){
+    mark.classList.remove('is-bounce'); void mark.offsetWidth; mark.classList.add('is-bounce');
+  });
+  mark.addEventListener('animationend',function(){ mark.classList.remove('is-bounce'); });
+})();
+</script>
 </body></html>
