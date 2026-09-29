@@ -536,7 +536,7 @@
   }
   .brand:hover{ transform:translateY(-1px); }
   .brand-mark{ width:21px; height:21px; flex:none; display:flex; align-items:center; justify-content:center; }
-  .brand-mark svg{ width:100%; height:100%; }
+  .brand-mark svg{ width:100%; height:100%; overflow:visible; }
   .brand-name{ font-size:.82rem; color:var(--mist); font-weight:500; }
   .brand-dot{ color:var(--mist-dim); }
   .brand-home-label{
@@ -1607,9 +1607,10 @@
       <a class="brand" href="/" aria-label="Retourner à l'accueil" id="brandHome">
         <span class="brand-mark" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3.5 10.5 12 3l8.5 7.5"></path>
-            <path d="M5.5 9v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V9"></path>
-            <path d="M9.5 20v-6a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v6"></path>
+            <path d="M8.5 11 14 6.2a2 2 0 0 1 2.6 0L22 11"></path>
+            <path d="M10 10v8a2 2 0 0 0 2 2h6.5a2 2 0 0 0 2-2v-8"></path>
+            <path d="M7 14.5H2.5"></path>
+            <path d="M5 12 2.5 14.5 5 17"></path>
           </svg>
         </span>
         <span class="brand-name brand-home-label">Retourner à l'accueil</span>
