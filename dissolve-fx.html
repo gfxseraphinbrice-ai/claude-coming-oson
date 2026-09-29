@@ -473,23 +473,21 @@
     .diamond, .dot-pulse::after, .dot-pulse::before, .flip-badge .face{ animation:none !important; }
   }
 
-  /* ---- motif de fond général (pattern custom, 100% code) : cellules organiques bleu nuit
-     couvertes d'écailles en points, séparées par des liserés au dégradé animé du laser — rendu par un shader
-     WebGL (Voronoi animé + trame de points hexagonale), aucune image. Posé en retrait
-     (opacité + masque radial qui l'estompe derrière le texte), dérive lente et continue. */
+  /* ---- motif de fond général : trame fixe de points bleu nuit (grille hexagonale),
+     100% CSS, sans animation ni liserés. Masque radial qui l'estompe légèrement derrière
+     le texte. */
   .bg-pattern{
-    position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; display:block;
-    opacity:.1;
-    -webkit-mask-image:radial-gradient(ellipse 60% 75% at 30% 52%, rgba(0,0,0,.08) 0%, rgba(0,0,0,.4) 50%, #000 90%);
-            mask-image:radial-gradient(ellipse 60% 75% at 30% 52%, rgba(0,0,0,.08) 0%, rgba(0,0,0,.4) 50%, #000 90%);
+    position:absolute; inset:0; z-index:0; pointer-events:none; display:block;
+    background-image:
+      radial-gradient(ellipse 5px 6px at center, rgba(43,63,219,.55) 0 60%, transparent 100%),
+      radial-gradient(ellipse 5px 6px at center, rgba(43,63,219,.55) 0 60%, transparent 100%);
+    background-size:24px 24px, 24px 24px;
+    background-position:0 0, 12px 12px;
+    opacity:.35;
+    -webkit-mask-image:radial-gradient(ellipse 60% 75% at 30% 52%, rgba(0,0,0,.35) 0%, rgba(0,0,0,.7) 50%, #000 90%);
+            mask-image:radial-gradient(ellipse 60% 75% at 30% 52%, rgba(0,0,0,.35) 0%, rgba(0,0,0,.7) 50%, #000 90%);
   }
-  /* repli sans WebGL : simple lueur verte/bleue en dégradés */
-  .bg-pattern.no-gl{
-    background:
-      radial-gradient(ellipse 40% 30% at 85% 20%, rgba(40,220,130,.14), transparent 70%),
-      radial-gradient(ellipse 50% 40% at 10% 90%, rgba(30,70,200,.18), transparent 70%);
-  }
-  @media (max-width:768px){ .bg-pattern{ opacity:.075; } }
+  @media (max-width:768px){ .bg-pattern{ background-size:20px 20px, 20px 20px; background-position:0 0, 10px 10px; } }
 
   /* ---- ambient background ---- */
   .ambient{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
@@ -1587,7 +1585,7 @@
 
 <div class="stage" id="stage">
   <div class="ambient" aria-hidden="true">
-    <canvas class="bg-pattern" id="bgPattern"></canvas>
+    <span class="bg-pattern"></span>
     <span class="diamond d1"></span>
     <span class="diamond d2"></span>
     <span class="diamond d3"></span>
@@ -2867,87 +2865,4 @@
 })();
 </script>
 
-<script>
-/* ---- pattern de fond custom (WebGL) : Voronoi animé à bords déformés = cellules
-   organiques ; liserés vert néon sur les frontières ; écailles en points (trame hexagonale)
-   dont la taille suit le bombé de chaque cellule. 30 fps max, DPR plafonné, pause quand
-   l'onglet est masqué, image fixe si "réduire les animations". ---- */
-(function(){
-  var cv = document.getElementById('bgPattern');
-  if(!cv) return;
-  var gl = cv.getContext('webgl', {antialias:false, alpha:true, premultipliedAlpha:false, powerPreference:'low-power'});
-  if(!gl){ cv.classList.add('no-gl'); return; }
-  var vs = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
-  var fs = [
-    'precision mediump float;',
-    'uniform vec2 R;uniform float T;',
-    'vec2 h2(vec2 p){p=vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3)));return fract(sin(p)*43758.5453);}',
-    'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);',
-    ' float a=h2(i).x,b=h2(i+vec2(1,0)).x,c=h2(i+vec2(0,1)).x,d=h2(i+vec2(1,1)).x;',
-    ' return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}',
-    'void main(){',
-    ' vec2 uv=gl_FragCoord.xy/R.y;',
-    ' float t=T*.045;',
-    /* légère perspective : les cellules s'agrandissent vers le bas, comme une surface inclinée */
-    ' vec2 p=uv*vec2(2.6,2.6);p.y*=1.+.25*(1.-gl_FragCoord.y/R.y);',
-    ' p+=.45*vec2(n(p*.8+t),n(p*.8+vec2(5.2,1.3)-t))-.22;',
-    ' vec2 ip=floor(p),fp=fract(p);float f1=8.,f2=8.;',
-    ' for(int j=-1;j<=1;j++)for(int i=-1;i<=1;i++){vec2 g=vec2(i,j);vec2 o=h2(ip+g);',
-    '  o=.5+.42*sin(T*.18+6.2831*o);float d=length(g+o-fp);',
-    '  if(d<f1){f2=f1;f1=d;}else if(d<f2){f2=d;}}',
-    ' float e=f2-f1;',
-    ' float line=smoothstep(.028,.004,e);',
-    ' float glow=exp(-e*20.)*.3;',
-    ' float bulge=pow(smoothstep(.06,.6,e),1.3);',
-    /* trame d écailles : grille hexagonale fine */
-    ' vec2 q=uv*vec2(95.,82.);q.x+=.5*mod(floor(q.y),2.);',
-    ' vec2 c=fract(q)-.5;float dd=length(c);',
-    ' float r=.08+.3*bulge;',
-    ' float dot1=smoothstep(r,r-.1,dd)*smoothstep(.07,.18,e);',
-    ' float hi=smoothstep(r*.7,0.,length(c+vec2(.08,-.1)))*dot1;',
-    ' vec3 base=vec3(.012,.02,.045);',
-    ' vec3 body=vec3(.02,.05,.14)*bulge;',
-    ' vec3 dots=vec3(.05,.15,.45)*dot1*(.25+.75*bulge)+vec3(.12,.3,.75)*hi*.3;',
-    /* liserés : même dégradé animé que le laser code-barres / titre "particules."
-       (#2b3fdb → #7c2ae8 → #1b2a8f → #7c2ae8 → #2b3fdb), qui défile en boucle de 7 s */
-    ' float ph=fract(gl_FragCoord.x/R.x*.33+gl_FragCoord.y/R.y*.12-T/7.)*4.;',
-    ' vec3 g1=vec3(.169,.247,.859),g2=vec3(.486,.165,.91),g3=vec3(.106,.165,.561);',
-    ' vec3 lc=ph<1.?mix(g1,g2,ph):ph<2.?mix(g2,g3,ph-1.):ph<3.?mix(g3,g2,ph-2.):mix(g2,g1,ph-3.);',
-    ' vec3 neon=lc*1.35*line+lc*glow;',
-    ' vec3 col=base+body+dots+neon;',
-    /* vignette sombre sur les bords haut/bas pour fondre dans la page */
-    ' float v=smoothstep(0.,.25,gl_FragCoord.y/R.y)*smoothstep(1.,.75,gl_FragCoord.y/R.y);',
-    ' col*=.55+.45*v;',
-    ' gl_FragColor=vec4(col,1.);}'
-  ].join('\n');
-  function sh(t,src){var o=gl.createShader(t);gl.shaderSource(o,src);gl.compileShader(o);return gl.getShaderParameter(o,gl.COMPILE_STATUS)?o:null;}
-  var v=sh(gl.VERTEX_SHADER,vs), f=sh(gl.FRAGMENT_SHADER,fs);
-  if(!v||!f){ cv.classList.add('no-gl'); return; }
-  var pr=gl.createProgram();gl.attachShader(pr,v);gl.attachShader(pr,f);gl.linkProgram(pr);
-  if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){ cv.classList.add('no-gl'); return; }
-  gl.useProgram(pr);
-  var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);
-  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
-  var loc=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-  var uR=gl.getUniformLocation(pr,'R'), uT=gl.getUniformLocation(pr,'T');
-  function size(){
-    var dpr=Math.min(window.devicePixelRatio||1,1.5);
-    var w=Math.max(1,Math.round(cv.clientWidth*dpr)), h=Math.max(1,Math.round(cv.clientHeight*dpr));
-    if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;gl.viewport(0,0,w,h);}
-    gl.uniform2f(uR,w,h);
-  }
-  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var t0=performance.now(), last=0, raf=0;
-  function frame(now){
-    raf=requestAnimationFrame(frame);
-    if(now-last<33) return; last=now;
-    size(); gl.uniform1f(uT,(now-t0)/2000+20.); /* temps /2 : pattern animé 2x moins vite */ gl.drawArrays(gl.TRIANGLES,0,3);
-  }
-  if(reduce){ size(); gl.uniform1f(uT,20.); gl.drawArrays(gl.TRIANGLES,0,3); addEventListener('resize',function(){size();gl.drawArrays(gl.TRIANGLES,0,3);}); return; }
-  raf=requestAnimationFrame(frame);
-  document.addEventListener('visibilitychange',function(){
-    if(document.hidden){cancelAnimationFrame(raf);}else{last=0;raf=requestAnimationFrame(frame);}
-  });
-})();
-</script>
 </body></html>
