@@ -465,11 +465,34 @@
     animation-play-state:running;
   }
 
+  /* ---- révélation au scroll (en cascade, dans les 2 sens) ----
+     Une fois l'entrée d'ouverture terminée, html.cascade-done fige les éléments .cascade /
+     .cascade-card dans leur état final (les animations "forwards" bloqueraient sinon toute
+     autre opacité), puis un IntersectionObserver prend le relais : chaque élément .sr qui
+     sort de l'écran se cache, et quand il y revient il réapparaît — un par un, de haut en bas,
+     avec un délai croissant (--sr-delay). Utilise translate/opacity/filter, indépendants du
+     transform des hovers existants. */
+  html.cascade-done .cascade,
+  html.cascade-done .cascade-card{ animation:none !important; opacity:1; transform:none; filter:none; }
+  .sr{
+    transition-property:opacity, translate, filter, transform, background, color;
+    transition-duration:.75s, .85s, .75s, .45s, .45s, .5s;
+    transition-timing-function:var(--ease-out);
+    transition-delay:var(--sr-delay,0s), var(--sr-delay,0s), var(--sr-delay,0s), 0s, 0s, 0s;
+  }
+  .sr.sr-hidden{
+    opacity:0 !important;
+    translate:0 var(--sr-dir,26px);
+    filter:blur(12px) !important;
+    transition-delay:0s;
+  }
+
   @media (prefers-reduced-motion:reduce){
     #entryOverlay{ display:none !important; }
     .stage{ animation:none !important; -webkit-mask-image:none !important; mask-image:none !important; filter:none !important; }
     .cascade{ animation:none !important; opacity:1 !important; transform:none !important; filter:none !important; }
     .cascade-card{ animation:none !important; opacity:1 !important; transform:none !important; filter:none !important; }
+    .sr.sr-hidden{ opacity:1 !important; translate:none; filter:none !important; }
     .diamond, .dot-pulse::after, .dot-pulse::before, .flip-badge .face{ animation:none !important; }
   }
 
@@ -2914,6 +2937,50 @@
     mark.addEventListener('animationend',go,{once:true});
     setTimeout(go,1000); /* filet de sécurité */
   });
+})();
+</script>
+
+<script>
+/* révélation au scroll en cascade (haut → bas, et bas → haut quand on remonte) */
+(function(){
+  if(!('IntersectionObserver' in window)) return;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var root=document.documentElement;
+  var SEL='.eyebrow, .hero-text h1, .lede, .spec, .spec > li, .hero-visual, .footer';
+  function start(){
+    root.classList.add('cascade-done');
+    var els=[].slice.call(document.querySelectorAll(SEL));
+    els.forEach(function(el){ el.classList.add('sr'); });
+    var order=new Map(); els.forEach(function(el,i){ order.set(el,i); });
+    var io=new IntersectionObserver(function(entries){
+      var entering=[];
+      entries.forEach(function(en){
+        var el=en.target;
+        if(en.isIntersecting){ if(el.classList.contains('sr-hidden')) entering.push(el); }
+        else{
+          /* sorti par le haut → reviendra en descendant ; par le bas → en montant */
+          el.style.setProperty('--sr-dir', en.boundingClientRect.top < 0 ? '-26px' : '26px');
+          el.style.setProperty('--sr-delay','0s');
+          el.classList.add('sr-hidden');
+        }
+      });
+      entering.sort(function(a,b){ return order.get(a)-order.get(b); });
+      /* en remontant, la cascade part du bas (élément le plus proche du bord d'entrée) */
+      if(entering.length && entering[0].style.getPropertyValue('--sr-dir')==='-26px') entering.reverse();
+      entering.forEach(function(el,k){
+        el.style.setProperty('--sr-delay',(k*0.11).toFixed(2)+'s');
+        requestAnimationFrame(function(){ el.classList.remove('sr-hidden'); });
+      });
+    },{ threshold:0.12, rootMargin:'0px 0px -6% 0px' });
+    els.forEach(function(el){ io.observe(el); });
+  }
+  function whenReady(){
+    /* dernière entrée (--i:6) : .55s + .6s de délai + ~.85s d'animation → ~2s après site-ready */
+    setTimeout(start, 2200);
+  }
+  if(root.classList.contains('site-ready')) whenReady();
+  else new MutationObserver(function(m,o){ if(root.classList.contains('site-ready')){ o.disconnect(); whenReady(); } })
+        .observe(root,{attributes:true,attributeFilter:['class']});
 })();
 </script>
 </body></html>
